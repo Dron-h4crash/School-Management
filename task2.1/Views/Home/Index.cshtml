@@ -1,0 +1,45 @@
+﻿@model List<task2.Models.PeopleViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Список</h2>
+
+<table class="table">
+    <tr>
+        <th>
+           ФИО
+        </th>
+        <th>
+            Дата рождения
+        </th>
+        <th>
+            Email
+        </th>
+        <th>
+            телефон
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @item.FirstName  @item.SecondName  @item.LastName
+            </td>
+            <td>
+                @item.DateBirthday
+            </td>
+            <td>
+                @item.Email
+            </td>
+            <td>
+                @item.Phone
+            </td>
+        </tr>
+    }
+
+</table>
+@Html.ActionLink("Добавить человека", "AddPeople")
+        
