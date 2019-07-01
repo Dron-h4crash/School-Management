@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using task2.DAL.EF;
 using task2.DAL.Entities;
 using task2.DAL.Intefaces;
@@ -18,6 +14,7 @@ namespace task2.DAL.Repositories
         {
             db = new PeopleContext(connectionString);
         }
+
         public IRepository<People> Peoples
         {
             get

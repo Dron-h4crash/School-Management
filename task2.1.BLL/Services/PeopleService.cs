@@ -1,9 +1,5 @@
 ﻿using AutoMapper;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using task2.BLL.DTO;
 using task2.BLL.Infrastructure;
 using task2.BLL.Interfaces;
@@ -20,10 +16,22 @@ namespace task2.BLL.Services
         {
             Database = uow;
         }
+
         public void AddPeople(PeopleDTO peopleDto)
         {
+            if (string.IsNullOrEmpty(peopleDto.FirstName)) 
+                throw new ValidationException("имя пустое", "Firstname");
+            if (string.IsNullOrEmpty(peopleDto.LastName))
+                throw new ValidationException("фамилия пустая", "Lastname");
+            if (string.IsNullOrEmpty(peopleDto.SecondName))
+                throw new ValidationException("отчество пустое", "Secondname");
+            if (string.IsNullOrEmpty(peopleDto.Phone))
+                throw new ValidationException("телефон пустой", "Phone");
+            if (peopleDto.DateBirthday == null)
+                throw new ValidationException("дата рождения не задана", "DateBirthday");
+            if (string.IsNullOrEmpty(peopleDto.Email))
+                throw new ValidationException("Email пустой", "Email");
 
-            //TODO: валидация 
             People people = new People
             {
                 FirstName = peopleDto.FirstName,

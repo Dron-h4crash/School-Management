@@ -1,9 +1,4 @@
 ﻿using Ninject.Modules;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using task2.DAL.Intefaces;
 using task2.DAL.Repositories;
 
@@ -16,6 +11,7 @@ namespace task2.BLL.Infrastructure
         {
             connectionString = connection;
         }
+
         public override void Load()
         {
             Bind<IUnitOfWork>().To<EFUnitOfWork>().WithConstructorArgument(connectionString);

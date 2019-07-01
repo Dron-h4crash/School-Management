@@ -7,66 +7,171 @@
 <h2>Добавление человека</h2>
 
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
 
-<div class="form-horizontal">
+    <div class="form-horizontal">
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+        <div class="form-group">
+            @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control", id = "FirstName" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control", id = "LastName" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SecondName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.SecondName, new { htmlAttributes = new { @class = "form-control", id = "SecondName" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2"})
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", id = "Email" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DateBirthday, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="text" name="DateBirthday" id="datepicker" readonly/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control", id = "Phone" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="Button" id="peopleAdd" value="добавить человека" class="btn btn-default" />
+            </div>
         </div>
     </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.SecondName, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.SecondName, new { htmlAttributes = new { @class = "form-control" } })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.DateBirthday, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            <input type="datetime" name="DateBirthday" value="@Model.DateBirthday" />
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control" } })
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="добавить человека" class="btn btn-default" />
-        </div>
-    </div>
-</div>
-}
 
 <div>
     @Html.ActionLink("вернуться назад", "Index")
 </div>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#datepicker").datepicker(
+            {
+            yearRange: "1920:2020",
+            changeMonth: true,
+            changeYear: true
+            });
+
+        function validateEmail(email) {
+            var re = /^[a-z0-9\.\_%+-]+@@[a-z0-9\.\-]+\.[a-z]{2,4}$/i;
+            return re.test(String(email).toLowerCase());
+        }
+
+        $("#peopleAdd").click(function () {
+
+            var formIsValid = true;
+
+            var firstName = $("#FirstName").val();
+            if (!firstName) {
+                formIsValid = false;
+                alert("введите имя");
+                return;
+            }
+            if (firstName.length < 3 || firstName.length > 30) {
+                formIsValid = false;
+                alert("Неверный формат имени");
+                return;
+            }
+
+            var lastName = $("#LastName").val();
+            if (!lastName) {
+                formIsValid = false;
+                alert("введите фамилию")
+                return;
+            }
+            if (lastName.length < 3 || lastName.length > 30) {
+                formIsValid = false;
+                alert("Неверный формат фамилии");
+                return;
+            }
+
+            var secondName = $("#SecondName").val();
+            if (!secondName) {
+                formIsValid = false;
+                alert("введите отчество")
+                return;
+            }
+            if (secondName.length < 3 || secondName.length > 30) {
+                formIsValid = false;
+                alert("Неверный формат отчества");
+                return;
+            }
+
+            var birthday = $("#datepicker").datepicker('getDate');
+            if (!birthday) {
+                formIsValid = false;
+                alert("введите дату рождения")
+                return;
+            }
+
+            var email = $("#Email").val();
+            if (!email) {
+                formIsValid = false;
+                alert("введите Email");
+                return;
+            }
+            if (!validateEmail(email)) {
+                formIsValid = false;
+                alert("неверный формат Email");
+                return;
+            } 
+
+            var phone = $("#Phone").val();
+            if (!phone) {
+                formIsValid = false;
+                alert("введите номер телефона")
+                return;
+            }
+            if (phone.length < 6 || phone.length > 20) {
+                formIsValid = false;
+                alert("Неверный формат телефона");
+                return;
+            }
+            const regex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+            if (!regex.test(phone)) {                
+                formIsValid = false;
+                alert("Неверный формат телефона (10 цифр)");
+                return;
+            }
+
+            if (formIsValid)
+            $.get("/Home/AddPeopleJSON",
+                {
+                    "FirstName": firstName,
+                    "LastName": lastName,
+                    "SecondName": secondName,
+                    "Email": email,
+                    "DateBirthday": new Date(birthday).toUTCString(),
+                    "Phone": phone
+                })
+                .done(function (data) {
+                if (data.success) {
+                    document.location.href = "/";
+                } else {
+                    alert(data.errorstring);
+                }
+            });
+        });
+    });
+</script>

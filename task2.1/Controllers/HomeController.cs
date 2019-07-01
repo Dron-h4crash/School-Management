@@ -1,8 +1,5 @@
 ﻿using AutoMapper;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using task2.BLL.DTO;
 using task2.BLL.Infrastructure;
@@ -18,6 +15,7 @@ namespace task2.Controllers
         {
             peopleService = serv;
         }
+
         public ActionResult Index()
         {
             IEnumerable<PeopleDTO> peopleDtos = peopleService.GetPeoples();
@@ -39,8 +37,8 @@ namespace task2.Controllers
                 return Content(ex.Message);
             }
         }
-        [HttpPost]
-        public ActionResult AddPeople(PeopleViewModel people)
+        
+        public JsonResult AddPeopleJSON(PeopleViewModel people)
         {
             try
             {
@@ -55,14 +53,16 @@ namespace task2.Controllers
                 };
 
                 peopleService.AddPeople(peopleDto);
-                return Redirect("Index");
+                return Json( new {success = true, data = people}, JsonRequestBehavior.AllowGet);
             }
             catch (ValidationException ex)
             {
                 ModelState.AddModelError(ex.Property, ex.Message);
+                return Json(new { success = false, errorstring = ex.Message }, JsonRequestBehavior.AllowGet);
             }
-            return View(people);
+            
         }
+
         protected override void Dispose(bool disposing)
         {
             peopleService.Dispose();

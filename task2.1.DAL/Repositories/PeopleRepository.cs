@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using task2.DAL.EF;
 using task2.DAL.Entities;
 using task2.DAL.Intefaces;
