@@ -1,64 +1,43 @@
-﻿using Microsoft.AspNet.SignalR;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Web.Mvc;
-using task2._1.Hubs;
+using AutoMapper;
 using task2.BLL.DTO;
 using task2.BLL.Infrastructure;
 using task2.BLL.Interfaces;
 using task2.Models;
-using task2.Util;
 
 namespace task2.Controllers
 {
     public class PeopleController : Controller
     {
         private IPeopleService peopleService;
-        
 
         public PeopleController(IPeopleService serv)
         {
             this.peopleService = serv;
-            this.peopleService.tevent.dataChanged += DataChanged;
+            IEnumerable<PeopleDTO> peopleDtos = peopleService.GetPeoples();
         }
 
         public ActionResult Index()
         {
             IEnumerable<PeopleDTO> peopleDtos = peopleService.GetPeoples();
-            var peoples = MapperUtils.mapper.Map<IEnumerable<PeopleDTO>, List<PeopleViewModel>>(peopleDtos);
-
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<PeopleDTO, PeopleViewModel>()).CreateMapper();
+            var peoples = mapper.Map<IEnumerable<PeopleDTO>, List<PeopleViewModel>>(peopleDtos);
             return View(peoples);
         }
 
-        public ActionResult AddPeople(int? id=null)
+        public ActionResult AddPeople()
         {
-            PeopleViewModel people = null;
-            if (id.HasValue)
-            {
-                var peopleDTO = peopleService.GetPeople(id.Value);
-                people = MapperUtils.mapper.Map<PeopleDTO, PeopleViewModel>(peopleDTO);
-            }
-            else
-            {
-                people = new PeopleViewModel();
-            }
-
+            var people = new PeopleViewModel();
             return View(people);
-        }
-
-        public ActionResult DelPeople(int id)
-        {
-            peopleService.DelPeople(id);
-            return RedirectToAction("Index");
         }
 
         public JsonResult AddPeopleJSON(PeopleViewModel people)
         {
             try
             {
-                
                 var peopleDto = new PeopleDTO
                 {
-                    Id = people.Id,
                     FirstName = people.FirstName,
                     LastName = people.LastName,
                     SecondName = people.SecondName,
@@ -67,14 +46,7 @@ namespace task2.Controllers
                     DateBirthday = people.DateBirthday
                 };
 
-                if (people.Id > 0)
-                {
-                    peopleService.EditPeople(peopleDto);
-                }
-                else
-                {
-                    peopleService.AddPeople(peopleDto);
-                }
+                peopleService.AddPeople(peopleDto);
                 return Json(new { success = true, data = people }, JsonRequestBehavior.AllowGet);
             }
             catch (ValidationException ex)
@@ -82,13 +54,6 @@ namespace task2.Controllers
                 ModelState.AddModelError(ex.Property, ex.Message);
                 return Json(new { success = false, errorstring = ex.Message }, JsonRequestBehavior.AllowGet);
             }
-        }
-
-        private void DataChanged()
-        {
-            var context = GlobalHost.ConnectionManager.GetHubContext<MyHub>();
-            // отправляем сообщение
-            context.Clients.All.onDataChanged();
         }
 
         protected override void Dispose(bool disposing)
