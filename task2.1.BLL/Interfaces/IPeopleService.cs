@@ -19,7 +19,8 @@
 
         void EditPeople(PeopleDTO orderDto);
 
-        Events tevent { get; set; }
+        ChangedData EventChanges { get; set; }
+        Events onSave { get; set; }
 
     }
 }

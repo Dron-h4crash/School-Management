@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.SignalR;
 using System.Collections.Generic;
 using System.Web.Mvc;
+using task2._1.BLL.Util;
 using task2._1.Hubs;
 using task2.BLL.DTO;
 using task2.BLL.Infrastructure;
@@ -18,7 +19,7 @@ namespace task2.Controllers
         public PeopleController(IPeopleService serv)
         {
             this.peopleService = serv;
-            this.peopleService.tevent.dataChanged += DataChanged;
+            this.peopleService.onSave.ChangesSaved += DataChanged;
         }
 
         public ActionResult Index()
@@ -84,11 +85,14 @@ namespace task2.Controllers
             }
         }
 
-        private void DataChanged()
+        private void DataChanged(List<Changes> Operations)
         {
             var context = GlobalHost.ConnectionManager.GetHubContext<MyHub>();
-            // отправляем сообщение
-            context.Clients.All.onDataChanged();
+            // отправляем сообщения в зависимости от проведенных операций
+            foreach (var operatin in Operations)
+            {
+                context.Clients.All.onDataChanged();
+            }
         }
 
         protected override void Dispose(bool disposing)

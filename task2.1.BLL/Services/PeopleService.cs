@@ -14,12 +14,14 @@
     {
         private IUnitOfWork database;
         private bool disposed = false;
-        public Events tevent { get; set; }
+        public ChangedData EventChanges { get; set; }
+        public Events onSave { get; set; }
 
         public PeopleService(IUnitOfWork uow)
         {
             this.database = uow;
-            this.tevent = new Events();
+            this.EventChanges = new PeoplesChanges();
+            onSave = new Events();
         }
 
         public void AddPeople(PeopleDTO peopleDto)
@@ -38,16 +40,18 @@
                 };
 
                 this.database.Peoples.Create(people);
-                this.database.Save();
-                tevent.DataChanged();
+                EventChanges = new AddingOperation(EventChanges);
+                EventChanges.AddOperation();
+                Save();
             }
         }
 
         public void DelPeople(int id)
         {
             this.database.Peoples.Delete(id);
-            this.database.Save();
-            tevent.DataChanged();
+            EventChanges = new DelOperation(EventChanges);
+            EventChanges.AddOperation();
+            Save();
         }
 
         public void EditPeople(PeopleDTO peopleDto)
@@ -62,9 +66,16 @@
                 people.Phone = peopleDto.Phone;
                 people.DateBirthday = peopleDto.DateBirthday;
                 this.database.Peoples.Update(people);
-                this.database.Save();
-                tevent.DataChanged();
+                EventChanges = new EditOperation(EventChanges);
+                EventChanges.AddOperation();
+                Save();
             }
+        }
+
+        private void Save()
+        {
+            this.database.Save();
+            onSave.OnChangesSaved(EventChanges);
         }
 
         private bool ValidatePeople(PeopleDTO peopleDto)
