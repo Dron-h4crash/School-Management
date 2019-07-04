@@ -1,0 +1,64 @@
+﻿@model List<task2.Models.PeopleViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Список</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            ФИО
+        </th>
+        <th>
+            Дата рождения
+        </th>
+        <th>
+            Email
+        </th>
+        <th>
+            телефон
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+<tr>
+    <td>
+        @item.FirstName  @item.SecondName  @item.LastName
+    </td>
+    <td>
+        @item.DateBirthday.ToShortDateString()
+    </td>
+    <td>
+        @item.Email
+    </td>
+    <td>
+        @item.Phone
+    </td>
+    <td>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ActionLink("Редактировать", "AddPeople", new {id = item.Id})
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ActionLink("Удалить", "DelPeople", new { id = item.Id })
+            </div>
+        </div>
+    </td>
+
+</tr>
+    }
+
+</table>
+@Html.ActionLink("Добавить человека", "AddPeople")
+ 
+    <!--Ссылка на библиотеку SignalR -->
+    <script src="~/Scripts/jquery.signalR-2.4.1.min.js"></script>
+    <!--Ссылка на автоматически сгенерированный скрипт хаба SignalR -->
+    <script src="~/signalr/hubs"></script>
+    <script src="~/Scripts/util.js"></script>       

@@ -1,18 +1,17 @@
-﻿using Ninject;
-using Ninject.Modules;
-using Ninject.Web.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Optimization;
-using System.Web.Routing;
-using task2.BLL.Infrastructure;
-using task2.Util;
-
-namespace task2
+﻿namespace task2
 {
+    using System.Web.Mvc;
+    using System.Web.Optimization;
+    using System.Web.Routing;
+    using Ninject;
+    using Ninject.Modules;
+    using Ninject.Web.Common;
+    using Ninject.Web.Mvc;
+    using task2.BLL.Infrastructure;
+    using task2.BLL.Interfaces;
+    using task2.BLL.Services;
+    using task2.Util;
+
     public class MvcApplication : System.Web.HttpApplication
     {
         protected void Application_Start()
@@ -22,10 +21,10 @@ namespace task2
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            // внедрение зависимостей
-            NinjectModule orderModule = new PeopleModule();
+            // Внедрение зависимостей.
             NinjectModule serviceModule = new ServiceModule("DefaultConnection");
-            var kernel = new StandardKernel(orderModule, serviceModule);
+            var kernel = new StandardKernel(serviceModule);
+            kernel.Bind<IPeopleService>().To<PeopleService>().InRequestScope();
             DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
         }
     }

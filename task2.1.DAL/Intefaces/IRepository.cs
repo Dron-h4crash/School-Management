@@ -1,18 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace task2.DAL.Intefaces
+﻿namespace task2.DAL.Intefaces
 {
-    public interface IRepository<T> where T : class
+    using System;
+    using System.Collections.Generic;
+
+    public interface IRepository<T> 
+        where T : class
     {
+        /// <summary>
+        /// Получение всех объектов.
+        /// </summary>
         IEnumerable<T> GetAll();
+
+        /// <summary>
+        /// Получение одного объекта по id.
+        /// </summary>
         T Get(int id);
-        IEnumerable<T> Find(Func<T, Boolean> predicate);
+
+        /// <summary>
+        /// Проверяет наличие объекта.
+        /// </summary>
+        IEnumerable<T> Find(Func<T, bool> predicate);
+
+        /// <summary>
+        /// Создание объекта.
+        /// </summary>
         void Create(T item);
+
+        /// <summary>
+        /// Обновление объекта.
+        /// </summary>
         void Update(T item);
+
+        /// <summary>
+        /// Удаление объекта.
+        /// </summary>
         void Delete(int id);
     }
 }

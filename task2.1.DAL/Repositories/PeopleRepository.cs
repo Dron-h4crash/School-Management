@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using task2.DAL.EF;
-using task2.DAL.Entities;
-using task2.DAL.Intefaces;
-
-namespace task2.DAL.Repositories
+﻿namespace task2.DAL.Repositories
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Linq;
+    using task2.DAL.EF;
+    using task2.DAL.Entities;
+    using task2.DAL.Intefaces;
+
     public class PeopleRepository : IRepository<People>
     {
         private PeopleContext db;
@@ -21,34 +19,36 @@ namespace task2.DAL.Repositories
 
         public IEnumerable<People> GetAll()
         {
-            return db.Peoples;
+            return this.db.Peoples;
         }
 
         public People Get(int id)
         {
-            return db.Peoples.Find(id);
+            return this.db.Peoples.Find(id);
         }
 
         public void Create(People people)
         {
-            db.Peoples.Add(people);
+            this.db.Peoples.Add(people);
         }
 
         public void Update(People people)
         {
-            db.Entry(people).State = EntityState.Modified;
+            this.db.Entry(people).State = EntityState.Modified;
         }
 
-        public IEnumerable<People> Find(Func<People, Boolean> predicate)
+        public IEnumerable<People> Find(Func<People, bool> predicate)
         {
-            return db.Peoples.Where(predicate).ToList();
+            return this.db.Peoples.Where(predicate).ToArray();
         }
 
         public void Delete(int id)
         {
-            People people = db.Peoples.Find(id);
+            People people = this.db.Peoples.Find(id);
             if (people != null)
-                db.Peoples.Remove(people);
+            {
+                this.db.Peoples.Remove(people);
+            }
         }
     }
 }

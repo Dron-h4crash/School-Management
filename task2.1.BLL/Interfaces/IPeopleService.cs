@@ -1,17 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using task2.BLL.DTO;
-
-namespace task2.BLL.Interfaces
+﻿namespace task2.BLL.Interfaces
 {
-    public interface IPeopleService
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using task2._1.BLL.Util;
+    using task2.BLL.DTO;
+
+    public interface IPeopleService : IDisposable
     {
         void AddPeople(PeopleDTO orderDto);
+
         PeopleDTO GetPeople(int? id);
+        //Task<PeopleDTO> GetPeople();
         IEnumerable<PeopleDTO> GetPeoples();
-        void Dispose();
+        //Task<IEnumerable<PeopleDTO>> GetPeoples();
+
+        void DelPeople(int id);
+
+        void EditPeople(PeopleDTO orderDto);
+
+        Events tevent { get; set; }
+
     }
 }
