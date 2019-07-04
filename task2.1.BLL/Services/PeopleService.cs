@@ -1,36 +1,55 @@
-﻿using AutoMapper;
-using System.Collections.Generic;
-using task2.BLL.DTO;
-using task2.BLL.Infrastructure;
-using task2.BLL.Interfaces;
-using task2.DAL.Entities;
-using task2.DAL.Intefaces;
-
-namespace task2.BLL.Services
+﻿namespace task2.BLL.Services
 {
+    using System;
+    using System.Collections.Generic;
+    using AutoMapper;
+    using task2.BLL.DTO;
+    using task2.BLL.Infrastructure;
+    using task2.BLL.Interfaces;
+    using task2.DAL.Entities;
+    using task2.DAL.Intefaces;
+
     public class PeopleService : IPeopleService
     {
-        IUnitOfWork Database { get; set; }
+        private IUnitOfWork database;
+        private bool disposed = false;
 
         public PeopleService(IUnitOfWork uow)
         {
-            Database = uow;
+            this.database = uow;
         }
 
         public void AddPeople(PeopleDTO peopleDto)
         {
-            if (string.IsNullOrEmpty(peopleDto.FirstName)) 
+            if (string.IsNullOrEmpty(peopleDto.FirstName))
+            {
                 throw new ValidationException("имя пустое", "Firstname");
+            }
+
             if (string.IsNullOrEmpty(peopleDto.LastName))
+            {
                 throw new ValidationException("фамилия пустая", "Lastname");
+            }
+
             if (string.IsNullOrEmpty(peopleDto.SecondName))
+            {
                 throw new ValidationException("отчество пустое", "Secondname");
+            }
+
             if (string.IsNullOrEmpty(peopleDto.Phone))
+            {
                 throw new ValidationException("телефон пустой", "Phone");
+            }
+
             if (peopleDto.DateBirthday == null)
+            {
                 throw new ValidationException("дата рождения не задана", "DateBirthday");
+            }
+
             if (string.IsNullOrEmpty(peopleDto.Email))
+            {
                 throw new ValidationException("Email пустой", "Email");
+            }
 
             People people = new People
             {
@@ -41,24 +60,31 @@ namespace task2.BLL.Services
                 Email = peopleDto.Email,
                 Phone = peopleDto.Phone
             };
-            Database.Peoples.Create(people);
-            Database.Save();
+
+            this.database.Peoples.Create(people);
+            this.database.Save();
         }
 
         public IEnumerable<PeopleDTO> GetPeoples()
         {
-            // применяем автомаппер для проекции одной коллекции на другую
+            // Применяем автомаппер для проекции одной коллекции на другую.
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<People, PeopleDTO>()).CreateMapper();
-            return mapper.Map<IEnumerable<People>, List<PeopleDTO>>(Database.Peoples.GetAll());
+            return mapper.Map<IEnumerable<People>, List<PeopleDTO>>(database.Peoples.GetAll());
         }
 
         public PeopleDTO GetPeople(int? id)
         {
             if (id == null)
+            {
                 throw new ValidationException("Не установлено id человека", "");
-            var people = Database.Peoples.Get(id.Value);
+            }
+
+            var people = this.database.Peoples.Get(id.Value);
+
             if (people == null)
+            {
                 throw new ValidationException("Человек не найден", "");
+            }
 
             return new PeopleDTO
             {
@@ -74,7 +100,21 @@ namespace task2.BLL.Services
 
         public void Dispose()
         {
-            Database.Dispose();
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                this.database.Dispose();
+                if (disposing)
+                {
+                    GC.SuppressFinalize(this);
+                }
+
+                this.disposed = true;
+            }
         }
     }
 }

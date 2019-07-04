@@ -24,7 +24,7 @@ namespace task2._1.DAL.Migrations
         
         public override void Down()
         {
-            DropTable("dbo.People");
+           DropTable("dbo.People");
         }
     }
 }

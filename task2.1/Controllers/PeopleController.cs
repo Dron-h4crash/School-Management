@@ -1,6 +1,6 @@
-﻿using AutoMapper;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Web.Mvc;
+using AutoMapper;
 using task2.BLL.DTO;
 using task2.BLL.Infrastructure;
 using task2.BLL.Interfaces;
@@ -8,12 +8,14 @@ using task2.Models;
 
 namespace task2.Controllers
 {
-    public class HomeController : Controller
+    public class PeopleController : Controller
     {
-        IPeopleService peopleService;
-        public HomeController(IPeopleService serv)
+        private IPeopleService peopleService;
+
+        public PeopleController(IPeopleService serv)
         {
-            peopleService = serv;
+            this.peopleService = serv;
+            IEnumerable<PeopleDTO> peopleDtos = peopleService.GetPeoples();
         }
 
         public ActionResult Index()
@@ -26,18 +28,10 @@ namespace task2.Controllers
 
         public ActionResult AddPeople()
         {
-            try
-            {
-                var people = new PeopleViewModel();
-
-                return View(people);
-            }
-            catch (ValidationException ex)
-            {
-                return Content(ex.Message);
-            }
+            var people = new PeopleViewModel();
+            return View(people);
         }
-        
+
         public JsonResult AddPeopleJSON(PeopleViewModel people)
         {
             try
@@ -53,14 +47,13 @@ namespace task2.Controllers
                 };
 
                 peopleService.AddPeople(peopleDto);
-                return Json( new {success = true, data = people}, JsonRequestBehavior.AllowGet);
+                return Json(new { success = true, data = people }, JsonRequestBehavior.AllowGet);
             }
             catch (ValidationException ex)
             {
                 ModelState.AddModelError(ex.Property, ex.Message);
                 return Json(new { success = false, errorstring = ex.Message }, JsonRequestBehavior.AllowGet);
             }
-            
         }
 
         protected override void Dispose(bool disposing)

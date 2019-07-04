@@ -1,11 +1,12 @@
-﻿using System;
-using System.ComponentModel;
-
-namespace task2.Models
+﻿namespace task2.Models
 {
+    using System;
+    using System.ComponentModel;
+
     public class PeopleViewModel
     {
         public int Id { get; set; }
+
         [DisplayName("Имя")]
         public string FirstName { get; set; }
 
