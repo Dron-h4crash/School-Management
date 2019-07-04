@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "task2.DAL", "task2.1.DAL\ta
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "task2.BLL", "task2.1.BLL\task2.BLL.csproj", "{2867ED5B-EC30-4D91-9D51-53BF24D3C74F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "task2.Common", "task2.Common\task2.Common.csproj", "{1D6250D8-4DDB-43B3-8CEB-F6080ABF7812}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "task2.Common", "task2.Common\task2.Common.csproj", "{1D6250D8-4DDB-43B3-8CEB-F6080ABF7812}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
